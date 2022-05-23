@@ -1,4 +1,4 @@
-package br.inatel.quotationmanagement.quotationmanagement;
+package br.inatel.quotationmanagement;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
