@@ -5,8 +5,10 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientException;
 
 import br.inatel.quotationmanagement.controller.dto.StockDto;
+import br.inatel.quotationmanagement.controller.exception.StockNotFoundException;
 import br.inatel.quotationmanagement.model.StockQuotation;
 import reactor.core.publisher.Mono;
 
@@ -17,21 +19,23 @@ public class StockQuotationService {
 		return Collections.emptyList();
 	}
 
-	public StockQuotation creatQuote(StockQuotation quote) {
-		StockDto stock = this.getExistingStock(quote.getStockId());
+	public StockQuotation creatQuote(StockQuotation quote) throws WebClientException{
+		StockDto stock = this.verifyStock(quote.getStockId());
 		quote.setStockId(stock.getId());
 		return quote;
 	}
 
-	private StockDto getExistingStock(String stockId) {
+	private StockDto verifyStock(String stockId) throws WebClientException, StockNotFoundException {
 		Mono<StockDto> monoStock = WebClient.create("http://localhost:8080")
 		.get()
 		.uri("/stock/"+stockId)
-		.retrieve().
-		bodyToMono(StockDto.class);
+		.retrieve()
+		.bodyToMono(StockDto.class);
 		monoStock.subscribe();
 		StockDto stock = monoStock.block();
-		System.out.println(stock.toString());
-		return stock;
+		if(stock!= null) {
+			return stock;
+		}
+		throw new StockNotFoundException('"'+ stockId + '"' + " stock does not exist in stock-manager API.");
 	}
 }
