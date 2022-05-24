@@ -3,6 +3,7 @@ package br.inatel.quotationmanagement.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,8 +31,9 @@ public class StockQuotationController {
 	 }
 	 
 	@PostMapping
-	public StockQuotation creat(@RequestBody StockQuotation quote) {
-		return quoteService.creatQuote(quote);
+	public ResponseEntity<?> creat(@RequestBody StockQuotation quote) {
+		quoteService.creatQuote(quote);
+		return ResponseEntity.created(null).build();
 	}
 
 }

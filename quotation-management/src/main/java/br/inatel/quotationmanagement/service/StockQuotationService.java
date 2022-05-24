@@ -19,9 +19,13 @@ public class StockQuotationService {
 		return Collections.emptyList();
 	}
 
-	public StockQuotation creatQuote(StockQuotation quote) throws WebClientException{
-		StockDto stock = this.verifyStock(quote.getStockId());
-		quote.setStockId(stock.getId());
+	public StockQuotation creatQuote(StockQuotation quote) throws StockNotFoundException {
+		StockDto stock;
+		try {
+			stock = this.verifyStock(quote.getStockId());
+		} catch (WebClientException e) {
+			e.printStackTrace();
+		}
 		return quote;
 	}
 
