@@ -6,8 +6,11 @@ import java.util.Map;
 import java.util.UUID;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.validator.constraints.Length;
 
 @Entity
 @Table(name="stock_quotation")
@@ -28,17 +31,20 @@ public class StockQuotation {
 	@CollectionTable(name="quote")
 	@MapKeyJoinColumn(name="quote_key")
 	@Column(name="quotes")
-	private Map<LocalDate, Double> quotes;
+	private Map<LocalDate, Double> quotes = new HashMap<>();
 
 	public StockQuotation() {
-		this.quotes = new HashMap<>();		
 	}
 	
 	public StockQuotation(String stockId) {
-		this();
 		this.stockId = stockId;
 	}
 	
+	public StockQuotation(String stockId, Map<LocalDate, Double> quotes) {
+		this(stockId);
+		this.quotes = quotes;
+	}
+
 	public UUID getId() {
 		return id;
 	}
