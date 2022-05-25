@@ -3,6 +3,7 @@ package br.inatel.quotationmanagement.service;
 import java.util.Collections;
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientException;
@@ -19,14 +20,18 @@ public class StockQuotationService {
 		return Collections.emptyList();
 	}
 
-	public StockQuotation creatQuote(StockQuotation quote) throws StockNotFoundException {
-		StockDto stock;
+	public HttpStatus creatQuote(StockQuotation quote) {
 		try {
-			stock = this.verifyStock(quote.getStockId());
+			StockDto stock = this.verifyStock(quote.getStockId());
+			System.out.println(stock.toString());
+		} catch (StockNotFoundException e) {
+			e.printStackTrace();
+			return HttpStatus.NOT_FOUND;
 		} catch (WebClientException e) {
 			e.printStackTrace();
+			return HttpStatus.BAD_GATEWAY;
 		}
-		return quote;
+		return HttpStatus.CREATED;
 	}
 
 	private StockDto verifyStock(String stockId) throws WebClientException, StockNotFoundException {

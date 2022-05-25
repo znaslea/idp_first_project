@@ -3,6 +3,7 @@ package br.inatel.quotationmanagement.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,15 +26,14 @@ public class StockQuotationController {
 		return quoteService.searchQuotes();
 	}
 
-	 @GetMapping("/{id}")
-	 public StockQuotation search(@PathVariable("id") String stockId) {
-		 return quoteService.creatQuote(new StockQuotation(stockId));
-	 }
+//	 @GetMapping("/{id}")
+//	 public StockQuotation search(@PathVariable("id") String stockId) {
+//		 return quoteService.creatQuote(new StockQuotation(stockId));
+//	 }
 	 
 	@PostMapping
 	public ResponseEntity<?> creat(@RequestBody StockQuotation quote) {
-		quoteService.creatQuote(quote);
-		return ResponseEntity.created(null).build();
+		return ResponseEntity.status(quoteService.creatQuote(quote)).build();
 	}
 
 }
